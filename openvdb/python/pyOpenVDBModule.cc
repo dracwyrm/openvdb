@@ -603,6 +603,7 @@ BOOST_PYTHON_MODULE(PY_OPENVDB_MODULE_NAME)
 #else
     import_array();
 #endif
+#endif
 
     using namespace openvdb::OPENVDB_VERSION_NAME;
 
