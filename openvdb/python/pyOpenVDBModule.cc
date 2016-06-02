@@ -35,12 +35,21 @@
 #include <boost/python/exception_translator.hpp>
 #ifdef PY_OPENVDB_USE_NUMPY
 #define PY_ARRAY_UNIQUE_SYMBOL PY_OPENVDB_ARRAY_API
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <arrayobject.h> // for import_array()
 #endif
 #include "openvdb/openvdb.h"
 #include "pyopenvdb.h"
 #include "pyGrid.h"
 #include "pyutil.h"
+
+// define PyInt_* macros for Python 3.x
+#if PY_MAJOR_VERSION >= 3
+    #define PyInt_Check PyLong_Check
+    #define PyInt_FromLong PyLong_FromLong
+    #define PyInt_AsLong PyLong_AsLong
+    #define PyInt_Type PyLong_Type
+#endif
 
 namespace py = boost::python;
 
@@ -589,6 +598,9 @@ BOOST_PYTHON_MODULE(PY_OPENVDB_MODULE_NAME)
 
 #ifdef PY_OPENVDB_USE_NUMPY
     // Initialize NumPy.
+#if PY_MAJOR_VERSION >= 3
+    if (_import_array()) { };
+#else
     import_array();
 #endif
 
